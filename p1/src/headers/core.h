@@ -60,11 +60,10 @@ extern bool itoi(int val, char *buf, size_t len);
 extern void memset(void *, byte, size_t);
 extern size_t strlen(const char *text);
 extern size_t intlen(int val);
+extern int strcmp(const char* left,const char* right);
 
 /*Function type definition for printf handlers*/
 typedef int PFHANDLER(fd, va_list *);
-
-
 
 /**
  * Registers handlers for printf.

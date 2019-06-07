@@ -1,13 +1,8 @@
-/* va_start example */
-
-#include<stdio.h>
-#include <unistd.h>
+#include "menu.h"
 
 int main (int argc, char** argv)
 {
+    exec_menu(argc-1,argv+1);
 
-    int out =  execlp("echo","echo","HI",NULL);
-    
-    fprintf(stdout,"%d\n",out);
     return 0;
 }

@@ -1,10 +1,12 @@
 #include "api.h"
 #include "core.h"
 
-void cfg_load(const char *path, struct h_cfg *cfg)
+bool cfg_load(const char *path, struct h_cfg *cfg)
 {
     int n = pread(path, cfg->data, sizeof(h_cfg_dat));
+    if(n<0) return FALSE;
     cfg->n = n / sizeof(struct h_seg);
+    return TRUE;
 }
 
 void cfg_merge(struct h_cfg *dest, const struct h_cfg **cfg_list, size_t count)
@@ -114,4 +116,65 @@ static __attribute__((constructor)) void __printf_register_api_callbacks()
 
     printf_register_handler('z', __printf_handler_z);
     printf_register_handler('Z', __printf_handler_Z);
+}
+
+
+/* Too lazy to load from config */
+static const char* params[] ={
+    "device_name",
+    "rom_revision",
+    "serial_number",
+
+    "bd_addr_part0",
+    "bd_addr_part1",
+    "bd_pass_part0",
+
+    "serial_baudrate",
+    "serial_baudrate",
+    "sleep_period",
+
+    "serial_parity",
+    "serial_data_bit",
+    "serail_stop_bit",
+
+    "bd_pass_part1",
+    "rom_checksum_part0",
+    "rom_checksum_part1"
+};
+
+static int data[][2]={
+    {0,0},
+    {0,1},
+    {0,2},
+
+    {1,0},
+    {1,1},
+    {1,2},
+    
+    {2,0},
+    {2,1},
+    {2,2},
+
+    {3,0},
+    {3,1},
+    {3,2},
+
+    {4,0},
+    {4,1},
+    {4,3}
+};
+/*   */
+
+bool cfg_get_pos(int dat[2],const char name[]){
+    
+    for(size_t i = 0;i< sizeof(params)/sizeof(char*);i++){
+        if(strcmp(name,params[i]) == 0){
+            
+            dat[0] = data[i][0];
+            dat[1] = data[i][1];
+            return TRUE;
+        }
+    }
+
+    return FALSE;
 }
