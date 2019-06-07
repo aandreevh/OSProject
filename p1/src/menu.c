@@ -28,9 +28,9 @@ void exec_menu(size_t count, const char *args[])
         break;
     }
 
+    out("%z",cfg);
     ASSERT_MENU(cfg_save(path, &cfg),"Couldn't save config.")
 
-    out("%z",cfg);
 }
 
 void menu_option_s(struct h_cfg *config, size_t count, const char *args[])
@@ -40,10 +40,10 @@ void menu_option_s(struct h_cfg *config, size_t count, const char *args[])
     char* param = args[0];
     char* data = args[1];
     
-    ASSERT_MENU(cfg_get_pos(pos, args[0]),"Invalid param name !")
-    ASSERT_MENU(cfg_enabled(config,pos),"Invalid param name !")
+    ASSERT_MENU(cfg_get_pos(pos, param),"Invalid param name !")
     ASSERT_MENU(cfg_set_data(config,pos,data),"Cannot set data !")
-
+    if(!cfg_enabled(config,pos))  ASSERT_MENU(cfg_switch_bit(config,pos),"Could not set bit !")
+    
 }
 
 #undef ASSERT_MENU

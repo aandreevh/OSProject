@@ -14,6 +14,7 @@ extern bool cfg_verify_pos(struct h_cfg *cfg, h_position position);
 
 extern bool seg_enabled(const struct h_seg *cfg, byte bit);
 extern bool cfg_enabled(const struct h_cfg *cfg, h_position pos);
+extern bool cfg_switch_bit(struct h_cfg* cfg, h_position pos);
 
 extern bool cfg_get_pos(h_position pos,const char name[]);
 extern bool cfg_set_data(struct h_cfg * cfg,h_position pos,const char data[]);
