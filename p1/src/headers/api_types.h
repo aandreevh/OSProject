@@ -9,6 +9,10 @@
 #define CFG_TYPE_INT  1
 #define CFG_TYPE_BYTE 2
 
+#define POS_SEG 0
+#define POS_ELT 1
+
+typedef byte h_position[2];
 typedef char h_text[16];
 
 /** segment header**/
@@ -67,7 +71,7 @@ typedef struct h_seg h_cfg_dat[CFG_MAX_SEG];
 typedef struct h_cfg
 {
     h_cfg_dat data;
-    size_t n;
+    byte n;
 };
 
 #endif

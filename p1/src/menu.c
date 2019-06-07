@@ -1,95 +1,49 @@
 #include "menu.h"
 #include "api.h"
-void exec_menu(size_t count, const char* args[]){
 
-    if(count <2 ){
-        err("Invalid argument count !");
-        exit(1);
-    }
+#define ASSERT_MENU(c,t) if(!(c)) {err(t);exit(1);}
+void exec_menu(size_t count, const char *args[])
+{
     struct h_cfg cfg;
-    if(!cfg_load(args[0],&cfg)){
-        err("Invalid config !");
-        exit(1);
-    }
-
-    if(strlen(args[1]) != 2){
-
-        err("Invalid  arguments !");
-        exit(1);
     
-    }
+    ASSERT_MENU(count>=2,"Invalid argument count !")
 
-     if(args[1][0] != '-'){
+    char* path = args[0];
 
-        err("Invalid  arguments !");
-        exit(1);
-    
-    }
+    ASSERT_MENU(cfg_load(path, &cfg),"Invalid config !")
+    ASSERT_MENU(strlen(args[1])==2 && args[1][0]=='-',"Invalid command !")
 
     char cmd = args[1][1];
+    count -= 2;
+    args += 2;
+
+    /**Could do printf way handlers for better scaleablility **/
+    switch (cmd)
+    {
+    case 's':
+        menu_option_s(&cfg, count, args);
+        break;
+    default: 
+    ASSERT_MENU(FALSE,"Invalid command !");
+        break;
+    }
+
+    ASSERT_MENU(cfg_save(path, &cfg),"Couldn't save config.")
+
+    out("%z",cfg);
+}
+
+void menu_option_s(struct h_cfg *config, size_t count, const char *args[])
+{
+    h_position pos;
+    ASSERT_MENU(count == 2, "Invalid argument count !")    
+    char* param = args[0];
+    char* data = args[1];
     
-    count-=2;
-    args+=2;
+    ASSERT_MENU(cfg_get_pos(pos, args[0]),"Invalid param name !")
+    ASSERT_MENU(cfg_enabled(config,pos),"Invalid param name !")
+    ASSERT_MENU(cfg_set_data(config,pos,data),"Cannot set data !")
 
-    switch(cmd){
-        case 's':
-            menu_option_s(&cfg,count,args);
-        break;
-        default:
-            err("Invalid command !");
-             exit(1);
-        break;
-
-    }
-
-    cfg_save(args[0],&cfg);
 }
 
-void menu_option_s(struct h_cfg* config,size_t count,const char* args[]){
-    if(count != 2){
-        err("Invalid argument count !");
-        exit(1);
-    }
-
-    int pos[2];
-
-   if(!cfg_get_pos(pos,args[0])){
-       err("Invalid name !");
-       exit(1);
-   }
-
-    int seg = pos[0],position = pos[1];
-
-    if(config->n-1 > seg){
-        err("Invalid segment !");
-        exit(1);
-    }
-
-    if(cfg_enabled(&config->data[seg],position)){
-        switch(  config->data[seg].data.header.data.type){
-            case CFG_TYPE_BYTE:
-
-            break;
-
-            case CFG_TYPE_INT:
-
-            break;
-
-            case CFG_TYPE_TEXT:
-            if(strlen(args[1]) <16){
-                    out(args[1]);
-            }
-                
-            break;
-
-            default:
-            err("Invalid config format !");
-            exit(1);
-            break;
-        }
-          
-    }else{
-        err("Config not enabled !");
-        exit(1);
-    }
-}
+#undef ASSERT_MENU
