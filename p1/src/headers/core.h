@@ -41,7 +41,8 @@ typedef int fd;
 #define exit(s) syscall(SYS_EXIT, s)
 #define write(f, p, n) syscall(SYS_WRITE, f, p, n)
 #define read(f, b, c) syscall(SYS_READ, f, b, c)
-#define open(p, m) syscall(SYS_OPEN, p, m)
+#define open(p, f) syscall(SYS_OPEN, p, f)
+#define openm(p, f,m) syscall(SYS_OPEN, p, f,m)
 #define close(f) syscall(SYS_CLOSE, f)
 
 /** file access ( copied from fcntl.h ) **/

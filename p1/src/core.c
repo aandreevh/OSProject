@@ -160,7 +160,7 @@ int pprintf(const char *path, const char *text, ...)
 {
     va_list vlist;
 
-    int fd = open(path, O_WRONLY | O_CREAT);
+    int fd = openm(path, O_WRONLY | O_CREAT,0644);
 
     if (fd < 0)
         return -1;
