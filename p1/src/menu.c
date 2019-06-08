@@ -11,6 +11,12 @@ void exec_menu(size_t count, const char *args[])
 {
     struct h_cfg cfg;
 
+    if(count == 1){
+        ASSERT_MENU(strcmp(args[0],"-h") ==0,"Invalid argument count !");
+         menu_option_h();
+         return;
+    }
+
     ASSERT_MENU(count >= 2, "Invalid argument count !")
 
     char *path = args[0];
@@ -66,6 +72,21 @@ void exec_menu(size_t count, const char *args[])
     }
 
     ASSERT_MENU(cfg_save(path, &cfg), "Couldn't save config !")
+}
+
+void menu_option_h(){
+    out("program - operates over bluetooth configuration\n");
+    out("program [CONFIG] [OPTION] [ARGUMENTS]... \n");
+    out("OPTIONS \n");
+    out("\t -s [PARAM] [VALUE] : changes param value and enables it \n");
+    out("\t -S [PARAM] [VALUE] : changes param value\n");
+    out("\t -g [PARAM] : prints param value if enabled\n");
+    out("\t -G [PARAM] : prints param value\n");
+    out("\t -l [PARAM]... : prints param values listed or all, if enabled\n");
+    out("\t -L [PARAM]... : prints param values listed or all\n");
+    out("\t -b [PARAM] [1|0] : enables|disables bit  \n");
+    out("\t -c ([SEG] [t|n|b])... : creates new config \n");
+    out("\t -p : prints config data\n");
 }
 
 void menu_option_c(struct h_cfg *config, size_t count, const char *args[])
